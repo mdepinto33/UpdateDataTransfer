@@ -1,0 +1,56 @@
+Option Explicit
+
+Sub UpdateDataRows()
+    Dim ws As Worksheet
+    Dim lastRow As Long
+    Dim rngA As Range, rngD As Range
+    Dim rngE As Range, rngF As Range
+    Dim todayDate As Date
+    
+    ' Set the worksheet you want to work with
+    ' Change "Sheet1" to your sheet's name if different
+    Set ws = ThisWorkbook.Sheets("Sheet1")
+    
+    ' Find the last used row in the worksheet
+    lastRow = ws.Cells.Find(What:="*", _
+                            After:=ws.Range("A1"), _
+                            LookAt:=xlPart, _
+                            LookIn:=xlFormulas, _
+                            SearchOrder:=xlByRows, _
+                            SearchDirection:=xlPrevious, _
+                            MatchCase:=False).Row
+    
+    ' Check if there are data rows beyond the header
+    If lastRow < 2 Then
+        MsgBox "There are no data rows to update.", vbInformation
+        Exit Sub
+    End If
+    
+    ' Define today's date
+    todayDate = Date
+    
+    ' Define the ranges excluding the header (row 1)
+    Set rngA = ws.Range("A2:A" & lastRow)
+    Set rngD = ws.Range("D2:D" & lastRow)
+    Set rngE = ws.Range("E2:E" & lastRow)
+    Set rngF = ws.Range("F2:F" & lastRow)
+    
+    ' 1. Insert "NEW" in Column A
+    rngA.Value = "NEW"
+    
+    ' 2. Clear contents in Column D
+    rngD.ClearContents
+    
+    ' 3. Clear contents and insert today's date in Columns E and F
+    rngE.ClearContents
+    rngF.ClearContents
+    rngE.Value = todayDate
+    rngF.Value = todayDate
+    
+    ' Optional: Format Columns E and F as dates
+    rngE.NumberFormat = "mm/dd/yyyy"
+    rngF.NumberFormat = "mm/dd/yyyy"
+    
+    ' Notify the user that the operation is complete
+    MsgBox "Data rows have been successfully updated.", vbInformation
+End Sub
